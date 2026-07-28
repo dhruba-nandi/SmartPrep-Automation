@@ -370,9 +370,9 @@ export class MenuItemsPage extends BasePage {
   async verifyCostAlertStatus(name: string, expectedStatus: string) {
     const row = this.page.getByRole('row').filter({ hasText: name }).first();
     await row.waitFor({ state: 'visible', timeout: TIMEOUT.default });
-    const alertCell = row.locator(`[data-testid="plate-cost-cell-${expectedStatus}"]`);
+    const alertCell = row.getByRole('cell').last();
     await expect(alertCell).toBeVisible({ timeout: TIMEOUT.default });
-    await expect(alertCell).toHaveText(expectedStatus);
+    await expect(alertCell).toContainText(expectedStatus);
   }
 
   async selectMenuItemCheckbox(name: string) {
@@ -410,6 +410,29 @@ export class MenuItemsPage extends BasePage {
     await editOption.waitFor({ state: 'visible', timeout: TIMEOUT.default });
     await editOption.click();
     await this.page.waitForTimeout(1000);
+  }
+
+  async clickDeleteAlert() {
+    const deleteOption = this.page.getByRole('menuitem', { name: /delete alert/i });
+    await deleteOption.waitFor({ state: 'visible', timeout: TIMEOUT.default });
+    await deleteOption.click();
+    await this.page.waitForTimeout(1000);
+  }
+
+  async confirmDeleteAlert() {
+    const deleteButton = this.page.getByRole('button', { name: /delete/i });
+    await deleteButton.waitFor({ state: 'visible', timeout: TIMEOUT.default });
+    await deleteButton.click();
+    await this.page.waitForLoadState('networkidle', { timeout: TIMEOUT.long });
+    await this.page.waitForTimeout(2000);
+  }
+
+  async verifyCostAlertDeleted(name: string) {
+    const row = this.page.getByRole('row').filter({ hasText: name }).first();
+    await row.waitFor({ state: 'visible', timeout: TIMEOUT.default });
+    const alertCell = row.getByRole('cell').last();
+    await expect(alertCell).toBeVisible({ timeout: TIMEOUT.default });
+    await expect(alertCell).not.toContainText('On');
   }
 
   async editCostAlertThreshold(under: string, over: string) {

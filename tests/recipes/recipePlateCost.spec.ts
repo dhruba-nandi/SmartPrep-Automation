@@ -387,7 +387,7 @@ test.describe('Recipe Plate Cost', () => {
     await menuItemsPage.navigateToMenuItems();
     await menuItemsPage.verifyMenuItemsPageLoaded();
     await menuItemsPage.openAddMenuItemForm();
-    await menuItemsPage.fillMenuItemDetails(testNames.plateCostAlertRecipe, 'test', '1', 'each');
+    await menuItemsPage.fillMenuItemDetails(testNames.plateCostAlertRecipe, testNames.recipeTypeMenu, '1', 'each');
     await menuItemsPage.addIngredient(testNames.plateCostAlertProduct, '1', 'each');
     await menuItemsPage.setGlobalMenuPrice('100');
     await menuItemsPage.clickSave();
@@ -440,7 +440,7 @@ test.describe('Recipe Plate Cost', () => {
     await menuItemsPage.navigateToMenuItems();
     await menuItemsPage.verifyMenuItemsPageLoaded();
     await menuItemsPage.openAddMenuItemForm();
-    await menuItemsPage.fillMenuItemDetails(testNames.deleteCostAlertRecipe, 'test', '1', 'each');
+    await menuItemsPage.fillMenuItemDetails(testNames.deleteCostAlertRecipe, testNames.recipeTypeMenu, '1', 'each');
     await menuItemsPage.addIngredient(testNames.plateCostAlertProduct, '1', 'each');
     await menuItemsPage.setGlobalMenuPrice('100');
     await menuItemsPage.clickSave();
