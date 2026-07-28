@@ -1,6 +1,7 @@
 import { test, expect, createResultsTracker } from '../../fixtures/basePersistentContext';
 import { ProductPage } from '../../pages/product/ProductPage';
 import { MenuItemsPage } from '../../pages/recipe/MenuItemsPage';
+import { BarItemsPage } from '../../pages/recipe/BarItemsPage';
 import { RecipeSetupPage } from '../../pages/recipe/RecipeSetupPage';
 import { LogInOutPage } from '../../pages/LogInOutPage';
 import { AppConfigPage } from '../../pages/developer/AppConfigPage';
@@ -14,6 +15,7 @@ test.describe.configure({ mode: 'serial' });
 test.describe('Recipe Plate Cost', () => {
   let productPage: ProductPage;
   let menuItemsPage: MenuItemsPage;
+  let barItemsPage: BarItemsPage;
   let recipeSetupPage: RecipeSetupPage;
   let loginPage: LogInOutPage;
   let appConfigPage: AppConfigPage;
@@ -23,6 +25,7 @@ test.describe('Recipe Plate Cost', () => {
   const { results, logResults } = createResultsTracker('Recipe Plate Cost', [
     // Recipe Type
     'Add Menu Recipe Type',
+    'Add Bar Recipe Type',
     // Plate Cost — Create & Verify
     'Add Plate Cost Product 1',
     'Add Plate Cost Product 2',
@@ -58,12 +61,31 @@ test.describe('Recipe Plate Cost', () => {
     // Edit Plate Cost Alert
     'Edit Plate Cost Alert Threshold',
     'Verify Cost Alert Status After Edit',
+    // Delete Plate Cost Alert
+    'Add Delete Cost Alert Recipe',
+    'Create Cost Alert for Delete Cost Alert Recipe',
+    'Delete Cost Alert for Delete Cost Alert Recipe',
+    'Verify Cost Alert Deleted Successfully',
+    // Pour Cost Alert (Bar Items)
+    'Add Pour Cost Alert Product',
+    'Add Pour Cost Alert Recipe',
+    'Create Cost Alert for Pour Cost Alert Recipe',
+    'Verify Pour Cost Alert Status is On',
+    // Edit Pour Cost Alert
+    'Edit Pour Cost Alert Threshold',
+    'Verify Pour Cost Alert Status After Edit',
+    // Delete Pour Cost Alert
+    'Add Delete Pour Cost Alert Recipe',
+    'Create Cost Alert for Delete Pour Cost Alert Recipe',
+    'Delete Cost Alert for Delete Pour Cost Alert Recipe',
+    'Verify Pour Cost Alert Deleted Successfully',
   ]);
 
   test.beforeAll(async ({ persistentPage }) => {
     test.setTimeout(600000);
     productPage = new ProductPage(persistentPage);
     menuItemsPage = new MenuItemsPage(persistentPage);
+    barItemsPage = new BarItemsPage(persistentPage);
     recipeSetupPage = new RecipeSetupPage(persistentPage);
     loginPage = new LogInOutPage(persistentPage);
     appConfigPage = new AppConfigPage(persistentPage);
@@ -84,6 +106,14 @@ test.describe('Recipe Plate Cost', () => {
     await recipeSetupPage.clickManageRecipeTypes();
     await recipeSetupPage.addRecipeType(testNames.recipeTypeMenu, 'Menu Items');
     results['Add Menu Recipe Type'] = 'passed';
+  });
+
+  test('Add Bar recipe type', async ({ persistentPage }) => {
+    await persistentPage.goto('about:blank');
+    await recipeSetupPage.navigateToRecipeSetup();
+    await recipeSetupPage.clickManageRecipeTypes();
+    await recipeSetupPage.addRecipeType(testNames.recipeTypeBar, 'Bar Items');
+    results['Add Bar Recipe Type'] = 'passed';
   });
 
   // ==========================================
@@ -400,5 +430,155 @@ test.describe('Recipe Plate Cost', () => {
     await menuItemsPage.searchMenuItem(testNames.plateCostAlertRecipe);
     await menuItemsPage.verifyCostAlertStatus(testNames.plateCostAlertRecipe, 'On');
     results['Verify Cost Alert Status After Edit'] = 'passed';
+  });
+
+  // ==========================================
+  // Stage 11: Delete Plate Cost Alert
+  // ==========================================
+
+  test('Add Delete Cost Alert Recipe', async () => {
+    await menuItemsPage.navigateToMenuItems();
+    await menuItemsPage.verifyMenuItemsPageLoaded();
+    await menuItemsPage.openAddMenuItemForm();
+    await menuItemsPage.fillMenuItemDetails(testNames.deleteCostAlertRecipe, 'test', '1', 'each');
+    await menuItemsPage.addIngredient(testNames.plateCostAlertProduct, '1', 'each');
+    await menuItemsPage.setGlobalMenuPrice('100');
+    await menuItemsPage.clickSave();
+    await menuItemsPage.verifyRedirectedToMenuItemsList();
+    results['Add Delete Cost Alert Recipe'] = 'passed';
+  });
+
+  test('Create Cost Alert for Delete Cost Alert Recipe', async () => {
+    await menuItemsPage.searchMenuItem(testNames.deleteCostAlertRecipe);
+    await menuItemsPage.selectMenuItemCheckbox(testNames.deleteCostAlertRecipe);
+    await menuItemsPage.clickManageCostAlerts();
+    await menuItemsPage.clickCreateCostAlert();
+    await menuItemsPage.clickSetAlert();
+    results['Create Cost Alert for Delete Cost Alert Recipe'] = 'passed';
+  });
+
+  test('Delete Cost Alert for Delete Cost Alert Recipe', async () => {
+    await menuItemsPage.navigateToMenuItems();
+    await menuItemsPage.verifyMenuItemsPageLoaded();
+    await menuItemsPage.searchMenuItem(testNames.deleteCostAlertRecipe);
+    await menuItemsPage.selectMenuItemCheckbox(testNames.deleteCostAlertRecipe);
+    await menuItemsPage.clickManageCostAlerts();
+    await menuItemsPage.clickDeleteAlert();
+    await menuItemsPage.confirmDeleteAlert();
+    results['Delete Cost Alert for Delete Cost Alert Recipe'] = 'passed';
+  });
+
+  test('Verify Cost Alert Deleted Successfully', async () => {
+    await menuItemsPage.searchMenuItem(testNames.deleteCostAlertRecipe);
+    await menuItemsPage.verifyCostAlertDeleted(testNames.deleteCostAlertRecipe);
+    results['Verify Cost Alert Deleted Successfully'] = 'passed';
+  });
+
+  // ==========================================
+  // Stage 12: Pour Cost Alert (Bar Items)
+  // ==========================================
+
+  test('Add Pour Cost Alert Product', async () => {
+    await productPage.navigateViaLeftNav();
+    await productPage.verifyProductsPageLoaded();
+    await productPage.clickAddProduct();
+    await productPage.enterProductName(testNames.pourCostAlertProduct);
+    await productPage.selectCategory('Beer');
+    await productPage.selectUnit('Bottle');
+    await productPage.setProductPrice('10');
+    await productPage.clickSave();
+    await productPage.verifyProductCreated(testNames.pourCostAlertProduct);
+    results['Add Pour Cost Alert Product'] = 'passed';
+  });
+
+  test('Add Pour Cost Alert Recipe', async () => {
+    await barItemsPage.navigateToBarItems();
+    await barItemsPage.verifyBarItemsPageLoaded();
+    await barItemsPage.openAddBarItemForm();
+    await barItemsPage.fillBarItemDetails(testNames.pourCostAlertRecipe, testNames.recipeTypeBar, '1', 'bottle');
+    await barItemsPage.addIngredient(testNames.pourCostAlertProduct, '1', 'bottle');
+    await barItemsPage.setGlobalMenuPrice('100');
+    await barItemsPage.clickSave();
+    await barItemsPage.verifyRedirectedToBarItemsList();
+    results['Add Pour Cost Alert Recipe'] = 'passed';
+  });
+
+  test('Create Cost Alert for Pour Cost Alert Recipe', async () => {
+    await barItemsPage.searchBarItem(testNames.pourCostAlertRecipe);
+    await barItemsPage.selectBarItemCheckbox(testNames.pourCostAlertRecipe);
+    await barItemsPage.clickManageCostAlerts();
+    await barItemsPage.clickCreateCostAlert();
+    await barItemsPage.clickSetAlert();
+    results['Create Cost Alert for Pour Cost Alert Recipe'] = 'passed';
+  });
+
+  test('Verify Pour Cost Alert Status is On', async () => {
+    await barItemsPage.searchBarItem(testNames.pourCostAlertRecipe);
+    await barItemsPage.verifyCostAlertStatus(testNames.pourCostAlertRecipe, 'On');
+    results['Verify Pour Cost Alert Status is On'] = 'passed';
+  });
+
+  // ==========================================
+  // Stage 13: Edit Pour Cost Alert
+  // ==========================================
+
+  test('Edit Pour Cost Alert Threshold', async () => {
+    await barItemsPage.navigateToBarItems();
+    await barItemsPage.verifyBarItemsPageLoaded();
+    await barItemsPage.searchBarItem(testNames.pourCostAlertRecipe);
+    await barItemsPage.selectBarItemCheckbox(testNames.pourCostAlertRecipe);
+    await barItemsPage.clickManageCostAlerts();
+    await barItemsPage.clickEditAlert();
+    await barItemsPage.editCostAlertThreshold('15', '40');
+    await barItemsPage.clickSaveChanges();
+    results['Edit Pour Cost Alert Threshold'] = 'passed';
+  });
+
+  test('Verify Pour Cost Alert Status After Edit', async () => {
+    await barItemsPage.searchBarItem(testNames.pourCostAlertRecipe);
+    await barItemsPage.verifyCostAlertStatus(testNames.pourCostAlertRecipe, 'On');
+    results['Verify Pour Cost Alert Status After Edit'] = 'passed';
+  });
+
+  // ==========================================
+  // Stage 14: Delete Pour Cost Alert
+  // ==========================================
+
+  test('Add Delete Pour Cost Alert Recipe', async () => {
+    await barItemsPage.navigateToBarItems();
+    await barItemsPage.verifyBarItemsPageLoaded();
+    await barItemsPage.openAddBarItemForm();
+    await barItemsPage.fillBarItemDetails(testNames.deletePourCostAlertRecipe, testNames.recipeTypeBar, '1', 'bottle');
+    await barItemsPage.addIngredient(testNames.pourCostAlertProduct, '1', 'bottle');
+    await barItemsPage.setGlobalMenuPrice('100');
+    await barItemsPage.clickSave();
+    await barItemsPage.verifyRedirectedToBarItemsList();
+    results['Add Delete Pour Cost Alert Recipe'] = 'passed';
+  });
+
+  test('Create Cost Alert for Delete Pour Cost Alert Recipe', async () => {
+    await barItemsPage.searchBarItem(testNames.deletePourCostAlertRecipe);
+    await barItemsPage.selectBarItemCheckbox(testNames.deletePourCostAlertRecipe);
+    await barItemsPage.clickManageCostAlerts();
+    await barItemsPage.clickCreateCostAlert();
+    await barItemsPage.clickSetAlert();
+    results['Create Cost Alert for Delete Pour Cost Alert Recipe'] = 'passed';
+  });
+
+  test('Delete Cost Alert for Delete Pour Cost Alert Recipe', async () => {
+    await barItemsPage.navigateToBarItems();
+    await barItemsPage.verifyBarItemsPageLoaded();
+    await barItemsPage.searchBarItem(testNames.deletePourCostAlertRecipe);
+    await barItemsPage.selectBarItemCheckbox(testNames.deletePourCostAlertRecipe);
+    await barItemsPage.clickManageCostAlerts();
+    await barItemsPage.clickDeleteAlert();
+    await barItemsPage.confirmDeleteAlert();
+    results['Delete Cost Alert for Delete Pour Cost Alert Recipe'] = 'passed';
+  });
+
+  test('Verify Pour Cost Alert Deleted Successfully', async () => {
+    await barItemsPage.searchBarItem(testNames.deletePourCostAlertRecipe);
+    await barItemsPage.verifyCostAlertDeleted(testNames.deletePourCostAlertRecipe);
+    results['Verify Pour Cost Alert Deleted Successfully'] = 'passed';
   });
 });

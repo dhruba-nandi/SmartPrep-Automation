@@ -48,4 +48,9 @@ export const testNames = {
   uomEditProduct2: `UoMEdit Product2 ${TEST_RUN_ID}`,
   uomEditRecipe: `UoMEdit Recipe ${TEST_RUN_ID}`,
   uomEditSubRecipe: `UoMEdit SubRecipe ${TEST_RUN_ID}`,
+  deleteCostAlertRecipe: `DeleteAlert Recipe ${TEST_RUN_ID}`,
+  pourCostAlertProduct: `PourCostAlert Product ${TEST_RUN_ID}`,
+  pourCostAlertRecipe: `PourCostAlert Recipe ${TEST_RUN_ID}`,
+  deletePourCostAlertRecipe: `DeletePourAlert Recipe ${TEST_RUN_ID}`,
+  recipeTypeCocktails: `Cocktails ${TEST_RUN_ID}`,
 };
