@@ -78,6 +78,8 @@ test.describe('Recipe Price Change', () => {
     'Verify UoMEdit Recipe Price In Natick After Change',
     'Verify UoMEdit SubRecipe Price In Natick After Change',
     'Switch Back To Tysons After UoMEdit Change',
+    // Default UoM Check
+    'Add Default UoM Product',
   ]);
 
   test.beforeAll(async ({ persistentPage }) => {
@@ -641,5 +643,21 @@ test.describe('Recipe Price Change', () => {
     await menuItemsPage.navigateToMenuItems();
     await menuItemsPage.switchTenant('Wasabi Tysons');
     results['Switch Back To Tysons After UoMEdit Change'] = 'passed';
+  });
+
+  // ==========================================
+  // Stage 19: Default UoM Check
+  // ==========================================
+
+  test('Add local product from central product (oil, canola)', async () => {
+    await productPage.navigateViaLeftNav();
+    await productPage.verifyProductsPageLoaded();
+    await productPage.clickAddProduct();
+    await productPage.enterProductName('oil, canola');
+    await productPage.selectCategory('Liquor');
+    await productPage.setProductPrice('10');
+    await productPage.clickSave();
+    await productPage.verifyProductCreated('oil, canola');
+    results['Add Default UoM Product'] = 'passed';
   });
 });
