@@ -80,6 +80,9 @@ test.describe('Recipe Price Change', () => {
     'Switch Back To Tysons After UoMEdit Change',
     // Default UoM Check
     'Add Default UoM Product',
+    'Verify Default UoM Conversion',
+    'Add Default UoM Recipe',
+    'Verify Default UoM Recipe Price',
   ]);
 
   test.beforeAll(async ({ persistentPage }) => {
@@ -659,5 +662,38 @@ test.describe('Recipe Price Change', () => {
     await productPage.clickSave();
     await productPage.verifyProductCreated('oil, canola');
     results['Add Default UoM Product'] = 'passed';
+  });
+
+  test('Verify default UoM conversion for oil, canola', async () => {
+    await productPage.navigateViaLeftNav();
+    await productPage.verifyProductsPageLoaded();
+    await productPage.searchProduct('oil, canola');
+    await productPage.openProductByName('oil, canola');
+    await productPage.clickEditProduct();
+    await productPage.verifyDefaultUomConversion(
+      '7.9', 'Ounces', '1', 'Cups',
+      '1 Ounce most recently cost $0.079'
+    );
+    results['Verify Default UoM Conversion'] = 'passed';
+  });
+
+  test('Create recipe with oil, canola as ingredient (1 Ounce)', async () => {
+    await menuItemsPage.navigateToMenuItems();
+    await menuItemsPage.verifyMenuItemsPageLoaded();
+    await menuItemsPage.openAddMenuItemForm();
+    await menuItemsPage.fillMenuItemDetails(testNames.defaultUomRecipe, testNames.recipeTypeMenu, '1', 'Ounce');
+    await menuItemsPage.addIngredient('oil, canola', '1', 'Ounce');
+    await menuItemsPage.clickSave();
+    await menuItemsPage.verifyRedirectedToMenuItemsList();
+    results['Add Default UoM Recipe'] = 'passed';
+  });
+
+  test('Verify default UoM recipe price', async () => {
+    await menuItemsPage.navigateToMenuItems();
+    await menuItemsPage.verifyMenuItemsPageLoaded();
+    await menuItemsPage.searchMenuItem(testNames.defaultUomRecipe);
+    const cost = await menuItemsPage.getMenuItemCost(testNames.defaultUomRecipe);
+    expect(cost).toBe('0.08');
+    results['Verify Default UoM Recipe Price'] = 'passed';
   });
 });

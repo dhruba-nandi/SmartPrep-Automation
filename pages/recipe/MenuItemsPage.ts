@@ -63,7 +63,7 @@ export class MenuItemsPage extends BasePage {
 
     await this.unitInput.click();
     await this.unitInput.fill(unit);
-    await this.page.getByRole('option', { name: new RegExp(unit, 'i') }).first().click();
+    await this.page.getByRole('option', { name: new RegExp(`^${unit}$`, 'i') }).first().click();
     await this.page.waitForTimeout(500);
   }
 
@@ -108,7 +108,7 @@ export class MenuItemsPage extends BasePage {
     const unitInput = ingredientRow.getByPlaceholder('Unit');
     await unitInput.click();
     await unitInput.fill(unit);
-    await this.page.getByRole('option', { name: new RegExp(unit, 'i') }).first().click();
+    await this.page.getByRole('option', { name: new RegExp(`^${unit}$`, 'i') }).first().click();
     await this.page.waitForTimeout(500);
 
     // Handle conversion modal if it appears
@@ -286,7 +286,7 @@ export class MenuItemsPage extends BasePage {
     const unitInput = row.getByPlaceholder('Unit');
     await unitInput.click();
     await unitInput.fill(newUnit);
-    await this.page.getByRole('option', { name: new RegExp(newUnit, 'i') }).first().click();
+    await this.page.getByRole('option', { name: new RegExp(`^${newUnit}$`, 'i') }).first().click();
     await this.page.waitForTimeout(500);
 
     // Handle conversion modal if it appears

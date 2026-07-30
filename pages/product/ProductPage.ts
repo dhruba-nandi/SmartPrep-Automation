@@ -203,6 +203,42 @@ export class ProductPage extends BasePage {
     await this.page.waitForTimeout(1000);
   }
 
+  async verifyDefaultUomConversion(
+    conversionAmount: string,
+    fromUnit: string,
+    toAmount: string,
+    toUnit: string,
+    expectedCost: string
+  ) {
+    await this.page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await this.page.waitForTimeout(1000);
+
+    // Find the conversion row that contains the expected cost text
+    const conversionRow = this.page.locator('tr').filter({ hasText: expectedCost }).first();
+    await conversionRow.waitFor({ state: 'visible', timeout: TIMEOUT.default });
+
+    // Verify conversion amount (e.g., 7.9)
+    const fromInput = conversionRow.locator('input[name="convertFromQuantityDisplay"]');
+    await expect(fromInput).toHaveValue(conversionAmount);
+
+    // Verify "from" unit selected option (e.g., Ounces)
+    const fromSelect = conversionRow.locator('select[name="unit"]');
+    const selectedFromText = await fromSelect.locator('option:checked').textContent();
+    expect(selectedFromText?.trim()).toBe(fromUnit);
+
+    // Verify "to" amount (e.g., 1)
+    const toInput = conversionRow.locator('input[name="convertToQuantityDisplay"]');
+    await expect(toInput).toHaveValue(toAmount);
+
+    // Verify "to" unit selected option (e.g., Cups)
+    const toSelect = conversionRow.locator('select[name="convertToUnit"]');
+    const selectedToText = await toSelect.locator('option:checked').textContent();
+    expect(selectedToText?.trim()).toBe(toUnit);
+
+    // Verify cost text
+    await expect(conversionRow).toContainText(expectedCost);
+  }
+
   async addProduct(name: string, category: string, unit: string) {
     await this.clickAddProduct();
     await this.enterProductName(name);
