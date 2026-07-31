@@ -18,8 +18,8 @@ export const testNames = {
   newVendorItem: `Automated New Item ${TEST_RUN_ID}`,
   recipe: `Automated Recipe ${TEST_RUN_ID}`,
   recipe2: `Automated Recipe2 ${TEST_RUN_ID}`,
-  s2Product: `S2 Product ${TEST_RUN_ID}`,
-  s2Recipe: `S2 Recipe ${TEST_RUN_ID}`,
+  invoicePriceProduct: `InvoicePrice Product ${TEST_RUN_ID}`,
+  invoicePriceRecipe: `InvoicePrice Recipe ${TEST_RUN_ID}`,
   s3Product: `S3 Product ${TEST_RUN_ID}`,
   s3Recipe: `S3 Recipe ${TEST_RUN_ID}`,
   countSheet: `Automated Countsheet ${TEST_RUN_ID}`,
@@ -55,4 +55,5 @@ export const testNames = {
   recipeTypeCocktails: `Cocktails ${TEST_RUN_ID}`,
   defaultUomProduct: `DefaultUoM Product ${TEST_RUN_ID}`,
   defaultUomRecipe: `DefaultUoM Recipe ${TEST_RUN_ID}`,
+  commissaryRecipe: `Commissary Recipe ${TEST_RUN_ID}`,
 };

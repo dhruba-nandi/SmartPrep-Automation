@@ -157,6 +157,18 @@ export class VendorItemPage extends BasePage {
     return false;
   }
 
+  async setOrderGuide(value: string) {
+    const lastRow = this.page.locator('.ui-grid-row').last();
+    const cells = lastRow.locator('.ui-grid-cell');
+    const cellCount = await cells.count();
+    // Order Guide is the last column
+    const orderGuideCell = cells.nth(cellCount - 1);
+    await orderGuideCell.locator('.ui-grid-cell-contents').click();
+    await this.page.waitForTimeout(500);
+    await orderGuideCell.locator('select').selectOption({ label: value });
+    await this.page.waitForTimeout(500);
+  }
+
   async scrollToBottomAndSave() {
     await this.page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     await this.page.waitForTimeout(1000);

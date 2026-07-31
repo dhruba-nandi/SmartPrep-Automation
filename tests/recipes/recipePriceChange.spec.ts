@@ -123,12 +123,12 @@ test.describe('Recipe Price Change', () => {
     await productPage.navigateViaLeftNav();
     await productPage.verifyProductsPageLoaded();
     await productPage.clickAddProduct();
-    await productPage.enterProductName(testNames.s2Product);
+    await productPage.enterProductName(testNames.invoicePriceProduct);
     await productPage.selectCategory('Cleaning Supplies');
     await productPage.selectUnit('Case');
     await productPage.setProductPrice('75');
     await productPage.clickSave();
-    await productPage.verifyProductCreated(testNames.s2Product);
+    await productPage.verifyProductCreated(testNames.invoicePriceProduct);
     results['Add Product'] = 'passed';
   });
 
@@ -138,7 +138,7 @@ test.describe('Recipe Price Change', () => {
     await vendorItemPage.clickAddVendorItem();
     await vendorItemPage.selectVendor('Arrow');
     await vendorItemPage.enterVendorItemName(testNames.vendorItem);
-    await vendorItemPage.selectProduct(testNames.s2Product);
+    await vendorItemPage.selectProduct(testNames.invoicePriceProduct);
     await vendorItemPage.clickAddPackagingOption();
     await vendorItemPage.fillPackagingDetails('1 Case', '1', 'Case', '75');
     await vendorItemPage.clickSave();
@@ -150,8 +150,8 @@ test.describe('Recipe Price Change', () => {
     await menuItemsPage.navigateToMenuItems();
     await menuItemsPage.verifyMenuItemsPageLoaded();
     await menuItemsPage.openAddMenuItemForm();
-    await menuItemsPage.fillMenuItemDetails(testNames.s2Recipe, testNames.recipeTypeMenu, '1', 'case');
-    await menuItemsPage.addIngredient(testNames.s2Product, '1', 'case');
+    await menuItemsPage.fillMenuItemDetails(testNames.invoicePriceRecipe, testNames.recipeTypeMenu, '1', 'case');
+    await menuItemsPage.addIngredient(testNames.invoicePriceProduct, '1', 'case');
     await menuItemsPage.clickSave();
     await menuItemsPage.verifyRedirectedToMenuItemsList();
     results['Add Menu Item'] = 'passed';
@@ -160,8 +160,8 @@ test.describe('Recipe Price Change', () => {
   test('Verify recipe price after creation', async () => {
     await menuItemsPage.navigateToMenuItems();
     await menuItemsPage.verifyMenuItemsPageLoaded();
-    await menuItemsPage.searchMenuItem(testNames.s2Recipe);
-    const cost = await menuItemsPage.getMenuItemCost(testNames.s2Recipe);
+    await menuItemsPage.searchMenuItem(testNames.invoicePriceRecipe);
+    const cost = await menuItemsPage.getMenuItemCost(testNames.invoicePriceRecipe);
     expect(cost).toBe('75.00');
     results['Verify Recipe Price'] = 'passed';
   });
@@ -253,8 +253,8 @@ test.describe('Recipe Price Change', () => {
   test('Edit product', async () => {
     await productPage.navigateViaLeftNav();
     await productPage.verifyProductsPageLoaded();
-    await productPage.searchProduct(testNames.s2Product);
-    await productPage.openProductByName(testNames.s2Product);
+    await productPage.searchProduct(testNames.invoicePriceProduct);
+    await productPage.openProductByName(testNames.invoicePriceProduct);
     await productPage.clickEditProduct();
     await productPage.scrollToBottomAndSave();
     results['Edit Product'] = 'passed';
@@ -265,8 +265,8 @@ test.describe('Recipe Price Change', () => {
     for (let attempt = 1; attempt <= 5; attempt++) {
       await menuItemsPage.navigateToMenuItems();
       await menuItemsPage.verifyMenuItemsPageLoaded();
-      await menuItemsPage.searchMenuItem(testNames.s2Recipe);
-      cost = await menuItemsPage.getMenuItemCost(testNames.s2Recipe);
+      await menuItemsPage.searchMenuItem(testNames.invoicePriceRecipe);
+      cost = await menuItemsPage.getMenuItemCost(testNames.invoicePriceRecipe);
       if (cost.includes('80')) break;
       await persistentPage.waitForTimeout(15000);
     }
@@ -286,8 +286,8 @@ test.describe('Recipe Price Change', () => {
   test('Verify recipe shows old price in Wasabi Natick', async () => {
     await menuItemsPage.navigateToMenuItems();
     await menuItemsPage.verifyMenuItemsPageLoaded();
-    await menuItemsPage.searchMenuItem(testNames.s2Recipe);
-    const cost = await menuItemsPage.getMenuItemCost(testNames.s2Recipe);
+    await menuItemsPage.searchMenuItem(testNames.invoicePriceRecipe);
+    const cost = await menuItemsPage.getMenuItemCost(testNames.invoicePriceRecipe);
     expect(cost).toBe('75.00');
     results['Verify Old Price In Natick'] = 'passed';
   });
