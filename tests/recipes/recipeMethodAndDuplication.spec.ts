@@ -11,7 +11,7 @@ import { testNames } from '../../fixtures/testData';
 
 test.describe.configure({ mode: 'serial' });
 
-test.describe('Recipe Regression Test', () => {
+test.describe('Recipe Method and Duplication', () => {
   let productPage: ProductPage;
   let vendorItemPage: VendorItemPage;
   let orderPage: OrderPage;
@@ -21,7 +21,7 @@ test.describe('Recipe Regression Test', () => {
   let restaurantUnitPage: RestaurantUnitPage;
   let recipeSetupPage: RecipeSetupPage;
 
-  const { results, logResults } = createResultsTracker('Recipe Regression Test', [
+  const { results, logResults } = createResultsTracker('Recipe Method and Duplication', [
     // Recipe Type
     'Add Menu Recipe Type',
     // Recipe Methods

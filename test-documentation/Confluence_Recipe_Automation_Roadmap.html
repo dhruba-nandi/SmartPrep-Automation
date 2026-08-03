@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recipe Module - E2E Automation Roadmap</title>
+  <style>
+    /* ===== Base ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: #f0f2f5;
+      color: #172b4d;
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ===== Header ===== */
+    .page-header {
+      background: linear-gradient(135deg, #0052cc 0%, #0065ff 50%, #4c9aff 100%);
+      color: #fff;
+      padding: 40px 48px;
+      border-radius: 12px;
+      margin-bottom: 32px;
+      box-shadow: 0 4px 24px rgba(0, 82, 204, 0.25);
+    }
+
+    .page-header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .page-header .subtitle {
+      font-size: 15px;
+      opacity: 0.9;
+      font-weight: 400;
+    }
+
+    /* ===== Stats Cards ===== */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 1px 4px rgba(9, 30, 66, 0.08);
+      border-top: 4px solid;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(9, 30, 66, 0.12);
+    }
+
+    .stat-card:nth-child(1) { border-top-color: #0052cc; }
+    .stat-card:nth-child(2) { border-top-color: #00875a; }
+    .stat-card:nth-child(3) { border-top-color: #ff991f; }
+    .stat-card:nth-child(4) { border-top-color: #6554c0; }
+
+    .stat-number {
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-card:nth-child(1) .stat-number { color: #0052cc; }
+    .stat-card:nth-child(2) .stat-number { color: #00875a; }
+    .stat-card:nth-child(3) .stat-number { color: #ff991f; }
+    .stat-card:nth-child(4) .stat-number { color: #6554c0; }
+
+    .stat-label {
+      font-size: 13px;
+      color: #6b778c;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    /* ===== Section ===== */
+    .section {
+      background: #fff;
+      border-radius: 10px;
+      padding: 32px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 4px rgba(9, 30, 66, 0.08);
+    }
+
+    .section h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #172b4d;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #f0f2f5;
+    }
+
+    .section h3 {
+      font-size: 17px;
+      font-weight: 600;
+      color: #0052cc;
+      margin: 28px 0 12px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section h3 .suite-badge {
+      background: #deebff;
+      color: #0052cc;
+      font-size: 12px;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    .file-info {
+      font-size: 13px;
+      color: #6b778c;
+      margin-bottom: 16px;
+    }
+
+    .file-info code {
+      background: #f4f5f7;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #0052cc;
+      font-weight: 500;
+    }
+
+    /* ===== Tables ===== */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid #dfe1e6;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    thead th {
+      background: #f4f5f7;
+      color: #505f79;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 2px solid #dfe1e6;
+    }
+
+    tbody td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #f0f2f5;
+      vertical-align: top;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background: #fafbfc;
+    }
+
+    /* Overview table specific */
+    .overview-table tbody td:first-child {
+      font-weight: 600;
+      color: #172b4d;
+    }
+
+    .overview-table tbody td:nth-child(2) {
+      text-align: center;
+      font-weight: 700;
+      color: #0052cc;
+    }
+
+    .overview-table tbody td:nth-child(4) {
+      text-align: center;
+    }
+
+    .overview-table tbody td:nth-child(5),
+    .overview-table tbody td:nth-child(6),
+    .overview-table tbody td:nth-child(7) {
+      text-align: center;
+      color: #6b778c;
+    }
+
+    /* Breakdown table */
+    .breakdown-table tbody td:first-child {
+      font-weight: 600;
+      color: #505f79;
+      white-space: nowrap;
+    }
+
+    .breakdown-table tbody td:nth-child(2) {
+      font-weight: 600;
+      color: #172b4d;
+    }
+
+    .breakdown-table tbody td:nth-child(3) {
+      text-align: center;
+      font-weight: 700;
+      color: #0052cc;
+    }
+
+    .breakdown-table tbody td:nth-child(4) {
+      color: #505f79;
+      font-size: 13px;
+    }
+
+    /* ===== Status Badge ===== */
+    .badge {
+      display: inline-block;
+      padding: 3px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-completed {
+      background: #e3fcef;
+      color: #006644;
+    }
+
+    .badge-in-progress {
+      background: #deebff;
+      color: #0052cc;
+    }
+
+    .badge-planned {
+      background: #fff0b3;
+      color: #974f0c;
+    }
+
+    /* ===== Progress Bar ===== */
+    .progress-bar-container {
+      width: 100%;
+      background: #f0f2f5;
+      border-radius: 8px;
+      height: 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 8px;
+      transition: width 0.6s ease;
+    }
+
+    .progress-green { background: linear-gradient(90deg, #36b37e, #00875a); }
+    .progress-blue  { background: linear-gradient(90deg, #4c9aff, #0052cc); }
+
+    /* ===== Footer ===== */
+    .footer {
+      background: #f4f5f7;
+      border-radius: 10px;
+      padding: 20px 32px;
+      margin-top: 8px;
+      text-align: center;
+      font-size: 14px;
+      color: #505f79;
+      border-left: 4px solid #0052cc;
+    }
+
+    .footer strong {
+      color: #172b4d;
+    }
+
+    /* ===== Divider ===== */
+    .divider {
+      height: 1px;
+      background: #e4e6ea;
+      margin: 32px 0;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+      .page-header { padding: 28px 24px; }
+      .page-header h1 { font-size: 24px; }
+      .section { padding: 20px; }
+      table { font-size: 12px; }
+      thead th, tbody td { padding: 8px 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ===== HEADER ===== -->
+  <div class="page-header">
+    <h1>Recipe Module - E2E Automation Roadmap</h1>
+    <div class="subtitle">MarginEdge &bull; Playwright (TypeScript) &bull; Serial Execution &bull; Persistent Browser Context</div>
+  </div>
+
+  <!-- ===== STATS ===== -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-number">141</div>
+      <div class="stat-label">Total Test Cases</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">5</div>
+      <div class="stat-label">Test Suites</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">5</div>
+      <div class="stat-label">Completed</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">100%</div>
+      <div class="stat-label">Overall Progress</div>
+    </div>
+  </div>
+
+  <!-- ===== OVERALL PROGRESS ===== -->
+  <div class="section">
+    <h2>Overall Progress</h2>
+    <div class="progress-bar-container">
+      <div class="progress-bar-fill progress-green" style="width: 100%;"></div>
+    </div>
+    <p style="text-align:center; margin-top:8px; font-size:13px; color:#6b778c;">141 / 141 test cases automated</p>
+  </div>
+
+  <!-- ===== PROGRESS OVERVIEW TABLE ===== -->
+  <div class="section">
+    <h2>Automation Progress Overview</h2>
+
+    <table class="overview-table">
+      <thead>
+        <tr>
+          <th>Components</th>
+          <th>Test Cases</th>
+          <th>Status</th>
+          <th>Percentage</th>
+          <th>Est. Deadline</th>
+          <th>Estimated Time</th>
+          <th>Owner</th>
+          <th>Notes / Remarks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Recipe Method and Duplication</td>
+          <td>11</td>
+          <td><span class="badge badge-completed">Completed</span></td>
+          <td>
+            <div class="progress-bar-container" style="height:8px; width:80px; display:inline-block; vertical-align:middle;">
+              <div class="progress-bar-fill progress-green" style="width:100%;"></div>
+            </div>
+            &nbsp;100%
+          </td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>Recipe methods (5 steps + images), unsupported format validation, duplicate recipe, cross-tenant sync</td>
+        </tr>
+        <tr>
+          <td>Recipe Plate Cost</td>
+          <td>43</td>
+          <td><span class="badge badge-completed">Completed</span></td>
+          <td>
+            <div class="progress-bar-container" style="height:8px; width:80px; display:inline-block; vertical-align:middle;">
+              <div class="progress-bar-fill progress-green" style="width:100%;"></div>
+            </div>
+            &nbsp;100%
+          </td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>Plate/pour cost calc, sub-recipe cost, price updates, cost alerts CRUD for Menu &amp; Bar items</td>
+        </tr>
+        <tr>
+          <td>Recipe Price Change</td>
+          <td>53</td>
+          <td><span class="badge badge-completed">Completed</span></td>
+          <td>
+            <div class="progress-bar-container" style="height:8px; width:80px; display:inline-block; vertical-align:middle;">
+              <div class="progress-bar-fill progress-green" style="width:100%;"></div>
+            </div>
+            &nbsp;100%
+          </td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>Invoice processing, UoM conversions (kg/lb/oz), cross-tenant price verification, default UoM</td>
+        </tr>
+        <tr>
+          <td>Recipe Active Deactive</td>
+          <td>26</td>
+          <td><span class="badge badge-completed">Completed</span></td>
+          <td>
+            <div class="progress-bar-container" style="height:8px; width:80px; display:inline-block; vertical-align:middle;">
+              <div class="progress-bar-fill progress-green" style="width:100%;"></div>
+            </div>
+            &nbsp;100%
+          </td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>Inventory lifecycle, recipe deactivation blocking (same-company &amp; cross-company tenant)</td>
+        </tr>
+        <tr>
+          <td>Recipe Commissary Items</td>
+          <td>8</td>
+          <td><span class="badge badge-completed">Completed</span></td>
+          <td>
+            <div class="progress-bar-container" style="height:8px; width:80px; display:inline-block; vertical-align:middle;">
+              <div class="progress-bar-fill progress-green" style="width:100%;"></div>
+            </div>
+            &nbsp;100%
+          </td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>Commissary vendor setup, recipe creation, order placement &amp; inbound shipment</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== COMPONENT BREAKDOWN ===== -->
+  <div class="section">
+    <h2>Component-wise Breakdown</h2>
+
+    <!-- 1. Recipe Method and Duplication -->
+    <h3>
+      1. Recipe Method and Duplication
+      <span class="suite-badge">11 Tests</span>
+    </h3>
+    <p class="file-info">Spec file: <code>recipeMethodAndDuplication.spec.ts</code></p>
+
+    <table class="breakdown-table">
+      <thead>
+        <tr><th>Stage</th><th>Feature</th><th>Test Cases</th><th>What is Automated</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Stage 1</td>
+          <td>Recipe Type Setup</td>
+          <td>1</td>
+          <td>Add Menu recipe type via Recipe Setup</td>
+        </tr>
+        <tr>
+          <td>Stage 2</td>
+          <td>Recipe Methods</td>
+          <td>3</td>
+          <td>Create menu item with 5 method steps &amp; image attachments, verify steps on view page, unsupported image format (.avif) validation</td>
+        </tr>
+        <tr>
+          <td>Stage 3</td>
+          <td>Duplicate Recipe</td>
+          <td>4</td>
+          <td>Create product &amp; recipe, duplicate via More Options, verify duplicate name ("Copy1-{name}")</td>
+        </tr>
+        <tr>
+          <td>Stage 4</td>
+          <td>Cross-Tenant Sync</td>
+          <td>3</td>
+          <td>Switch to Wasabi Natick, verify duplicate recipe visible, switch back to Tysons</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="divider"></div>
+
+    <!-- 2. Recipe Plate Cost -->
+    <h3>
+      2. Recipe Plate Cost
+      <span class="suite-badge">43 Tests</span>
+    </h3>
+    <p class="file-info">Spec file: <code>recipePlateCost.spec.ts</code></p>
+
+    <table class="breakdown-table">
+      <thead>
+        <tr><th>Stage</th><th>Feature</th><th>Test Cases</th><th>What is Automated</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Stage 1</td>
+          <td>Recipe Type Setup</td>
+          <td>2</td>
+          <td>Add Menu &amp; Bar recipe types</td>
+        </tr>
+        <tr>
+          <td>Stage 2</td>
+          <td>Plate Cost Calculation</td>
+          <td>3</td>
+          <td>Create 2 products ($10, $15), create recipe with both, verify cost = $25.00 and plate cost = 25.0%</td>
+        </tr>
+        <tr>
+          <td>Stage 3</td>
+          <td>SubRecipe Cost &amp; Detail Page</td>
+          <td>3</td>
+          <td>Create sub-recipe using recipe as ingredient, verify cost on list &amp; detail pages</td>
+        </tr>
+        <tr>
+          <td>Stage 4</td>
+          <td>Price Update Propagation</td>
+          <td>6</td>
+          <td>Edit product prices ($10&#8594;$20, $15&#8594;$30), verify updated costs ($50.00, 50.0%) on list &amp; detail pages</td>
+        </tr>
+        <tr>
+          <td>Stage 5-8</td>
+          <td>User Role &amp; App Config</td>
+          <td>9</td>
+          <td>Re-login as developer, enable price alert runners in App Config, configure accountant email &amp; preferences, re-login as accountmanager</td>
+        </tr>
+        <tr>
+          <td>Stage 9</td>
+          <td>Plate Cost Alert (Create)</td>
+          <td>4</td>
+          <td>Create product &amp; recipe, create cost alert, verify status = "On"</td>
+        </tr>
+        <tr>
+          <td>Stage 10</td>
+          <td>Plate Cost Alert (Edit)</td>
+          <td>2</td>
+          <td>Edit alert threshold (min 15, max 40), verify status remains "On"</td>
+        </tr>
+        <tr>
+          <td>Stage 11</td>
+          <td>Plate Cost Alert (Delete)</td>
+          <td>4</td>
+          <td>Create new recipe with alert, delete alert, verify alert removed</td>
+        </tr>
+        <tr>
+          <td>Stage 12</td>
+          <td>Pour Cost Alert &#8211; Bar (Create)</td>
+          <td>4</td>
+          <td>Create bar product (Beer/Bottle), bar recipe, pour cost alert, verify status = "On"</td>
+        </tr>
+        <tr>
+          <td>Stage 13</td>
+          <td>Pour Cost Alert &#8211; Bar (Edit)</td>
+          <td>2</td>
+          <td>Edit pour cost alert threshold, verify status</td>
+        </tr>
+        <tr>
+          <td>Stage 14</td>
+          <td>Pour Cost Alert &#8211; Bar (Delete)</td>
+          <td>4</td>
+          <td>Create bar recipe with alert, delete alert, verify alert removed</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="divider"></div>
+
+    <!-- 3. Recipe Price Change -->
+    <h3>
+      3. Recipe Price Change
+      <span class="suite-badge">53 Tests</span>
+    </h3>
+    <p class="file-info">Spec file: <code>recipePriceChange.spec.ts</code></p>
+
+    <table class="breakdown-table">
+      <thead>
+        <tr><th>Stage</th><th>Feature</th><th>Test Cases</th><th>What is Automated</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Stage 1</td>
+          <td>Tenant &amp; Recipe Type Setup</td>
+          <td>2</td>
+          <td>Switch to Wasabi Tysons, add Menu recipe type</td>
+        </tr>
+        <tr>
+          <td>Stage 2</td>
+          <td>Product, Vendor Item &amp; Recipe</td>
+          <td>4</td>
+          <td>Create product ($75/Case), vendor item (Arrow, 1 Case/$75), menu item, verify price = $75.00</td>
+        </tr>
+        <tr>
+          <td>Stage 3</td>
+          <td>Invoice Processing</td>
+          <td>5</td>
+          <td>Upload invoice, end preprocessing, verify In Processing status, complete initial review ($80), complete reconciliation</td>
+        </tr>
+        <tr>
+          <td>Stage 4</td>
+          <td>Final Review &amp; Price Verification</td>
+          <td>4</td>
+          <td>Verify invoice status, complete final review, edit product (trigger recalc), verify cost updated to $80 (retry logic)</td>
+        </tr>
+        <tr>
+          <td>Stage 5</td>
+          <td>Cross-Tenant Invoice Price</td>
+          <td>3</td>
+          <td>Switch to Natick, verify old price ($75.00) persists, switch back</td>
+        </tr>
+        <tr>
+          <td>Stage 6-8</td>
+          <td>UoM Recipe &amp; SubRecipe (Kilogram)</td>
+          <td>9</td>
+          <td>Create 3 Kilogram products ($10/$20/$30), recipe &amp; sub-recipe, verify cost = $60.00</td>
+        </tr>
+        <tr>
+          <td>Stage 9</td>
+          <td>Cross-Tenant UoM (Before Change)</td>
+          <td>4</td>
+          <td>Verify UoM recipe price ($60.00) and ingredient total in Natick</td>
+        </tr>
+        <tr>
+          <td>Stage 10-12</td>
+          <td>Unit Change (Kilogram &#8594; Pound)</td>
+          <td>7</td>
+          <td>Change product unit to Pound, verify price = $72.05 in both Tysons and Natick</td>
+        </tr>
+        <tr>
+          <td>Stage 13-17</td>
+          <td>UoMEdit (Edit Ingredient Units)</td>
+          <td>11</td>
+          <td>Create recipe, change ingredient units to Pound via recipe edit, verify price = $13.61 cross-tenant</td>
+        </tr>
+        <tr>
+          <td>Stage 18</td>
+          <td>Default UoM Check</td>
+          <td>4</td>
+          <td>Add central product (oil, canola), verify default conversion (7.9 oz = 1 cup), recipe cost = $0.08</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="divider"></div>
+
+    <!-- 4. Recipe Active Deactive -->
+    <h3>
+      4. Recipe Active Deactive
+      <span class="suite-badge">26 Tests</span>
+    </h3>
+    <p class="file-info">Spec file: <code>recipeInventory.spec.ts</code></p>
+
+    <table class="breakdown-table">
+      <thead>
+        <tr><th>Stage</th><th>Feature</th><th>Test Cases</th><th>What is Automated</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Stage 1-2</td>
+          <td>Setup</td>
+          <td>4</td>
+          <td>Switch to Wasabi Tysons, add recipe type, create product ($75/Case), create menu item</td>
+        </tr>
+        <tr>
+          <td>Stage 3</td>
+          <td>Inventory Create &amp; Close</td>
+          <td>2</td>
+          <td>Create count sheet with recipe, close inventory (count = 5)</td>
+        </tr>
+        <tr>
+          <td>Stage 4</td>
+          <td>Inventory Update &amp; Reopen</td>
+          <td>2</td>
+          <td>Remove recipe from count sheet, reopen closed inventory</td>
+        </tr>
+        <tr>
+          <td>Stage 5</td>
+          <td>Recipe Deactivation</td>
+          <td>3</td>
+          <td>Attempt deactivation (blocked by open inventory), delete inventory, deactivate recipe (success)</td>
+        </tr>
+        <tr>
+          <td>Stage 6-7</td>
+          <td>Same Company Tenant Check</td>
+          <td>7</td>
+          <td>Create product/recipe/inventory in Tysons, switch to Natick, verify deactivation blocked (in_use)</td>
+        </tr>
+        <tr>
+          <td>Stage 8-10</td>
+          <td>Cross-Company Tenant Check</td>
+          <td>8</td>
+          <td>Create new tenant (Mid-States), create product/recipe/inventory, verify deactivation blocked cross-company</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="divider"></div>
+
+    <!-- 5. Recipe Commissary Items -->
+    <h3>
+      5. Recipe Commissary Items
+      <span class="suite-badge">8 Tests</span>
+    </h3>
+    <p class="file-info">Spec file: <code>recipeCommissary.spec.ts</code></p>
+
+    <table class="breakdown-table">
+      <thead>
+        <tr><th>Stage</th><th>Feature</th><th>Test Cases</th><th>What is Automated</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Stage 1</td>
+          <td>Commissary Vendor Setup</td>
+          <td>1</td>
+          <td>Set Sysco as commissary vendor for Wasabi Tysons</td>
+        </tr>
+        <tr>
+          <td>Stage 2</td>
+          <td>Commissary Recipe Creation</td>
+          <td>1</td>
+          <td>Create prepared item (Cold Prepped) with commissary flag, order guide packaging, ingredient</td>
+        </tr>
+        <tr>
+          <td>Stage 3</td>
+          <td>Auto Vendor Item Verification</td>
+          <td>1</td>
+          <td>Verify vendor item auto-created for commissary recipe</td>
+        </tr>
+        <tr>
+          <td>Stage 4-5</td>
+          <td>Tenant Switch &amp; Order Guide</td>
+          <td>2</td>
+          <td>Switch to Natick, set vendor item order guide to Yes</td>
+        </tr>
+        <tr>
+          <td>Stage 6</td>
+          <td>Place Order</td>
+          <td>1</td>
+          <td>Place order with Sysco for commissary item (qty: 5)</td>
+        </tr>
+        <tr>
+          <td>Stage 7-8</td>
+          <td>Inbound Order Shipment</td>
+          <td>2</td>
+          <td>Switch back to Tysons, ship inbound order from Natick</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <div class="footer">
+    <strong>Grand Total:</strong> 141 automated E2E test cases across 5 test suites covering the Recipe module end-to-end.
+  </div>
+
+</div>
+
+</body>
+</html>

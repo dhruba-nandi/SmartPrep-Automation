@@ -8,7 +8,7 @@
     "test:ui": "playwright test --ui",
     "test:headed": "playwright test --headed",
     "test:report": "playwright show-report",
-    "test:recipe1": "npx playwright test tests/recipes/recipeRegressionTest.spec.ts --headed --project=chromium",
+    "test:recipe1": "npx playwright test tests/recipes/recipeMethodAndDuplication.spec.ts --headed --project=chromium",
     "test:plateCost": "npx playwright test tests/recipes/recipePlateCost.spec.ts --headed --project=chromium",
     "test:recipe2": "npx playwright test tests/recipes/recipePriceChange.spec.ts --headed --project=chromium",
     "test:recipe3": "npx playwright test tests/recipes/recipeActiveDeactive.spec.ts --headed --project=chromium",
