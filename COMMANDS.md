@@ -4,15 +4,17 @@
 
 | Suite | npm script | Playwright command |
 |-------|------------|--------------------|
-| Recipe Regression Test | `npm run test:recipe1` | `npx playwright test tests/recipes/recipeRegressionTest.spec.ts --headed --project=chromium` |
+| Recipe Method and Duplication | `npm run test:recipe1` | `npx playwright test tests/recipes/recipeMethodAndDuplication.spec.ts --headed --project=chromium` |
 | Recipe Price Change | `npm run test:recipe2` | `npx playwright test tests/recipes/recipePriceChange.spec.ts --headed --project=chromium` |
-| Recipe Active Deactive | `npm run test:recipe3` | `npx playwright test tests/recipes/recipeActiveDeactive.spec.ts --headed --project=chromium` |
+| Recipe Active Deactive | `npm run test:recipe3` | `npx playwright test tests/recipes/recipeInventory.spec.ts --headed --project=chromium` |
 | Recipe Plate Cost | `npm run test:plateCost` | `npx playwright test tests/recipes/recipePlateCost.spec.ts --headed --project=chromium` |
+| Recipe Commissary Items | `npm run test:commissary` | `npx playwright test tests/recipes/recipeCommissary.spec.ts --headed --project=chromium` |
+| Recipe Smart Prep | `npm run test:smartPrep` | `npx playwright test tests/recipes/recipeSmartPrep.spec.ts --headed --project=chromium` |
 
 ## Run All Recipe Suites Sequentially
 
 ```bash
-npx playwright test tests/recipes/recipeRegressionTest.spec.ts tests/recipes/recipePriceChange.spec.ts tests/recipes/recipeActiveDeactive.spec.ts tests/recipes/recipePlateCost.spec.ts --workers=1 --timeout 600000
+npx playwright test tests/recipes/recipeMethodAndDuplication.spec.ts tests/recipes/recipePriceChange.spec.ts tests/recipes/recipeInventory.spec.ts tests/recipes/recipePlateCost.spec.ts tests/recipes/recipeCommissary.spec.ts tests/recipes/recipeSmartPrep.spec.ts --workers=1 --timeout 600000
 ```
 
 ## Target a Different Environment
@@ -20,7 +22,7 @@ npx playwright test tests/recipes/recipeRegressionTest.spec.ts tests/recipes/rec
 By default, tests run against `me-63384.dev.marginedge.com`. Set `TEST_ENV` to override:
 
 ```bash
-TEST_ENV=master    npx playwright test tests/recipes/recipeRegressionTest.spec.ts --workers=1 --timeout 600000
+TEST_ENV=master    npx playwright test tests/recipes/recipeMethodAndDuplication.spec.ts --workers=1 --timeout 600000
 ```
 
 Works with any command — just prefix `TEST_ENV=<env>`.
@@ -34,7 +36,7 @@ JIRA_TICKET=ME-1234 \
 JIRA_BASE_URL=https://marginedge.atlassian.net \
 JIRA_EMAIL=user@co.com \
 JIRA_API_TOKEN=xxx \
-npx playwright test tests/recipes/recipeRegressionTest.spec.ts --workers=1 --timeout 600000
+npx playwright test tests/recipes/recipeMethodAndDuplication.spec.ts --workers=1 --timeout 600000
 ```
 
 ## Full Example (Environment + Jira + All Suites)
@@ -45,5 +47,5 @@ JIRA_TICKET=ME-1234 \
 JIRA_BASE_URL=https://marginedge.atlassian.net \
 JIRA_EMAIL=user@co.com \
 JIRA_API_TOKEN=xxx \
-npx playwright test tests/recipes/recipeRegressionTest.spec.ts tests/recipes/recipePriceChange.spec.ts tests/recipes/recipeActiveDeactive.spec.ts tests/recipes/recipePlateCost.spec.ts --workers=1 --timeout 600000
+npx playwright test tests/recipes/recipeMethodAndDuplication.spec.ts tests/recipes/recipePriceChange.spec.ts tests/recipes/recipeInventory.spec.ts tests/recipes/recipePlateCost.spec.ts tests/recipes/recipeCommissary.spec.ts tests/recipes/recipeSmartPrep.spec.ts --workers=1 --timeout 600000
 ```

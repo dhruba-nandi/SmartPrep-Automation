@@ -135,4 +135,13 @@ export class PreparedItemsPage extends BasePage {
     await expect(this.page).toHaveTitle('Prepared Items', { timeout: TIMEOUT.default });
     await expect(this.heading).toBeVisible({ timeout: TIMEOUT.default });
   }
+
+  async searchAndVerifyPreparedItem(name: string) {
+    const searchInput = this.page.locator('input[placeholder="Search"]');
+    await searchInput.waitFor({ state: 'visible', timeout: TIMEOUT.default });
+    await searchInput.fill(name);
+    await this.page.waitForTimeout(2000);
+    const row = this.page.getByRole('row').filter({ hasText: name }).first();
+    await expect(row).toBeVisible({ timeout: TIMEOUT.default });
+  }
 }

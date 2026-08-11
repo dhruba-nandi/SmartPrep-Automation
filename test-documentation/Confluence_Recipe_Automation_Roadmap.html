@@ -200,7 +200,8 @@
 
     .overview-table tbody td:nth-child(5),
     .overview-table tbody td:nth-child(6),
-    .overview-table tbody td:nth-child(7) {
+    .overview-table tbody td:nth-child(7),
+    .overview-table tbody td:nth-child(8) {
       text-align: center;
       color: #6b778c;
     }
@@ -319,15 +320,15 @@
   <!-- ===== STATS ===== -->
   <div class="stats-row">
     <div class="stat-card">
-      <div class="stat-number">141</div>
+      <div class="stat-number">149</div>
       <div class="stat-label">Total Test Cases</div>
     </div>
     <div class="stat-card">
-      <div class="stat-number">5</div>
+      <div class="stat-number">6</div>
       <div class="stat-label">Test Suites</div>
     </div>
     <div class="stat-card">
-      <div class="stat-number">5</div>
+      <div class="stat-number">6</div>
       <div class="stat-label">Completed</div>
     </div>
     <div class="stat-card">
@@ -342,7 +343,7 @@
     <div class="progress-bar-container">
       <div class="progress-bar-fill progress-green" style="width: 100%;"></div>
     </div>
-    <p style="text-align:center; margin-top:8px; font-size:13px; color:#6b778c;">141 / 141 test cases automated</p>
+    <p style="text-align:center; margin-top:8px; font-size:13px; color:#6b778c;">149 / 149 test cases automated</p>
   </div>
 
   <!-- ===== PROGRESS OVERVIEW TABLE ===== -->
@@ -358,8 +359,8 @@
           <th>Percentage</th>
           <th>Est. Deadline</th>
           <th>Estimated Time</th>
+          <th>Execution Time</th>
           <th>Owner</th>
-          <th>Notes / Remarks</th>
         </tr>
       </thead>
       <tbody>
@@ -375,8 +376,8 @@
           </td>
           <td>Jul 16, 2026</td>
           <td>1 day</td>
-          <td></td>
-          <td>Recipe methods (5 steps + images), unsupported format validation, duplicate recipe, cross-tenant sync</td>
+          <td>2.4m</td>
+          <td>Hedaetul Islam</td>
         </tr>
         <tr>
           <td>Recipe Plate Cost</td>
@@ -390,8 +391,8 @@
           </td>
           <td>Jul 28, 2026</td>
           <td>12 days</td>
-          <td></td>
-          <td>Plate/pour cost calc, sub-recipe cost, price updates, cost alerts CRUD for Menu &amp; Bar items</td>
+          <td>7.7m</td>
+          <td>Hedaetul Islam</td>
         </tr>
         <tr>
           <td>Recipe Price Change</td>
@@ -405,8 +406,8 @@
           </td>
           <td>Jul 31, 2026</td>
           <td>15 days</td>
-          <td></td>
-          <td>Invoice processing, UoM conversions (kg/lb/oz), cross-tenant price verification, default UoM</td>
+          <td>10.8m</td>
+          <td>Hedaetul Islam</td>
         </tr>
         <tr>
           <td>Recipe Active Deactive</td>
@@ -419,9 +420,9 @@
             &nbsp;100%
           </td>
           <td>Jul 30, 2026</td>
-          <td>1 day</td>
-          <td></td>
-          <td>Inventory lifecycle, recipe deactivation blocking (same-company &amp; cross-company tenant)</td>
+          <td>7 days</td>
+          <td>7.1m</td>
+          <td>Hedaetul Islam</td>
         </tr>
         <tr>
           <td>Recipe Commissary Items</td>
@@ -434,9 +435,24 @@
             &nbsp;100%
           </td>
           <td>Jul 31, 2026</td>
-          <td>1 day</td>
-          <td></td>
-          <td>Commissary vendor setup, recipe creation, order placement &amp; inbound shipment</td>
+          <td>3 days</td>
+          <td>2.0m</td>
+          <td>Hedaetul Islam</td>
+        </tr>
+        <tr>
+          <td>Recipe Smart Prep</td>
+          <td>8</td>
+          <td><span class="badge badge-completed">Completed</span></td>
+          <td>
+            <div class="progress-bar-container" style="height:8px; width:80px; display:inline-block; vertical-align:middle;">
+              <div class="progress-bar-fill progress-green" style="width:100%;"></div>
+            </div>
+            &nbsp;100%
+          </td>
+          <td>Aug 11, 2026</td>
+          <td>3 days</td>
+          <td>3.6m</td>
+          <td>Hedaetul Islam</td>
         </tr>
       </tbody>
     </table>
@@ -750,11 +766,76 @@
         </tr>
       </tbody>
     </table>
+
+    <div class="divider"></div>
+
+    <!-- 6. Recipe Smart Prep -->
+    <h3>
+      6. Recipe Smart Prep
+      <span class="suite-badge">8 Tests</span>
+    </h3>
+    <p class="file-info">Spec file: <code>recipeSmartPrep.spec.ts</code></p>
+
+    <table class="breakdown-table">
+      <thead>
+        <tr><th>Stage</th><th>Feature</th><th>Test Cases</th><th>What is Automated</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Stage 1</td>
+          <td>Create Checklist Template</td>
+          <td>1</td>
+          <td>Create checklist with sections, tasks (Cleaning, Dishwasher, Inventory Count, Food Prep), schedule &amp; store assignment</td>
+        </tr>
+        <tr>
+          <td>Stage 2</td>
+          <td>Edit Checklist Template</td>
+          <td>1</td>
+          <td>Rename checklist, add task (Equipment Check), update display time, save &amp; apply changes</td>
+        </tr>
+        <tr>
+          <td>Stage 3</td>
+          <td>Create Tasks</td>
+          <td>1</td>
+          <td>Create Checkmark &amp; Numerical response-type tasks from Tasks tab</td>
+        </tr>
+        <tr>
+          <td>Stage 4</td>
+          <td>AI Match Checklist</td>
+          <td>1</td>
+          <td>Create checklist using AI Match &#8211; paste task names, auto-match, add schedule, verify on Checklists tab</td>
+        </tr>
+        <tr>
+          <td>Stage 5</td>
+          <td>Create Prep List Template</td>
+          <td>1</td>
+          <td>Create prep list with 2 recipes, shelf life (1 day/1 kg), schedule &amp; store assignment</td>
+        </tr>
+        <tr>
+          <td>Stage 6</td>
+          <td>Edit Prep List Template</td>
+          <td>1</td>
+          <td>Rename prep list, add section with 3rd recipe, update display time, save &amp; apply changes</td>
+        </tr>
+        <tr>
+          <td>Stage 7</td>
+          <td>Verify Prep Items</td>
+          <td>1</td>
+          <td>Navigate to Prepared Items page, search &amp; verify all 3 prep items appear</td>
+        </tr>
+        <tr>
+          <td>Stage 8</td>
+          <td>AI Match Prep List</td>
+          <td>1</td>
+          <td>Create prep list using AI Match &#8211; paste recipe names, auto-match, add schedule, verify on Templates tab</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <!-- ===== FOOTER ===== -->
   <div class="footer">
-    <strong>Grand Total:</strong> 141 automated E2E test cases across 5 test suites covering the Recipe module end-to-end.
+    <strong>Grand Total:</strong> 149 automated E2E test cases across 6 test suites covering the Recipe module end-to-end.
   </div>
 
 </div>

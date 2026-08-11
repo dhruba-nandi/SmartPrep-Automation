@@ -23,6 +23,10 @@ export class PrepListPage extends BasePage {
   private readonly saveTemplateButton: Locator;
   private readonly saveChangesButton: Locator;
   private readonly addSectionButton: Locator;
+  private readonly matchTasksButton: Locator;
+  private readonly matchTasksHeading: Locator;
+  private readonly matchTasksInput: Locator;
+  private readonly matchTasksDrawerButton: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -47,6 +51,10 @@ export class PrepListPage extends BasePage {
     this.saveTemplateButton = page.getByRole('button', { name: 'Update template' });
     this.saveChangesButton = page.getByRole('button', { name: 'Save changes' });
     this.addSectionButton = page.getByRole('button', { name: /add section/i });
+    this.matchTasksButton = page.getByRole('button', { name: /Match recipes/ });
+    this.matchTasksHeading = page.getByRole('heading', { name: 'Match recipes', level: 1 });
+    this.matchTasksInput = page.getByRole('textbox', { name: 'Type or paste recipe names' });
+    this.matchTasksDrawerButton = page.getByRole('button', { name: /Match recipes/ }).last();
   }
 
   async navigateToPrepList() {
@@ -260,6 +268,27 @@ export class PrepListPage extends BasePage {
     await this.saveTemplateButton.waitFor({ state: 'visible', timeout: TIMEOUT.default });
     await this.saveTemplateButton.click();
     await this.page.waitForTimeout(1000);
+  }
+
+  async clickMatchTasksButton() {
+    await this.matchTasksButton.first().waitFor({ state: 'visible', timeout: TIMEOUT.default });
+    await this.matchTasksButton.first().click();
+    await this.matchTasksHeading.waitFor({ state: 'visible', timeout: TIMEOUT.default });
+  }
+
+  async fillAndMatchTasks(taskNames: string[]) {
+    await this.matchTasksInput.waitFor({ state: 'visible', timeout: TIMEOUT.default });
+    await this.matchTasksInput.fill(taskNames.join('\n'));
+    await this.page.waitForTimeout(500);
+
+    await this.matchTasksDrawerButton.waitFor({ state: 'visible', timeout: TIMEOUT.default });
+    await this.matchTasksDrawerButton.click();
+    await this.page.waitForLoadState('networkidle', { timeout: TIMEOUT.long });
+  }
+
+  async verifyMatchedTask(taskName: string) {
+    const taskCell = this.page.getByRole('cell', { name: taskName });
+    await expect(taskCell).toBeVisible({ timeout: TIMEOUT.default });
   }
 
   async selectApplyOptionAndSave() {

@@ -25,9 +25,10 @@ export default defineConfig({
       use: {
         ...devices['Desktop Chrome'],
         channel: 'chrome',
-        viewport: { width: 1920, height: 1080 },
+        viewport: null,
+        deviceScaleFactor: undefined,
         launchOptions: {
-          args: ['--ignore-certificate-errors', '--user-data-dir=./browser-data/playwright-chrome'],
+          args: ['--ignore-certificate-errors', '--user-data-dir=./browser-data/playwright-chrome', '--start-maximized'],
         },
       },
     },

@@ -19,20 +19,20 @@ export class RecipeSetupPage extends BasePage {
 
   async navigateToRecipeSetup() {
     await this.page.goto(`${this.baseUrl}/#/recipeSetup`, { waitUntil: 'domcontentloaded', timeout: TIMEOUT.long });
-    await this.page.waitForLoadState('networkidle', { timeout: TIMEOUT.long });
+    await this.page.waitForLoadState('networkidle', { timeout: TIMEOUT.long }).catch(() => {});
     await this.page.waitForTimeout(3000);
   }
 
   async clickManageRecipeTypes() {
     await this.manageRecipeTypesButton.waitFor({ state: 'visible', timeout: TIMEOUT.default });
     await this.manageRecipeTypesButton.click();
-    await this.page.waitForLoadState('networkidle', { timeout: TIMEOUT.long });
+    await this.page.waitForLoadState('networkidle', { timeout: TIMEOUT.long }).catch(() => {});
   }
 
   async clickAddNewRecipeType() {
     await this.addRecipeTypeButton.waitFor({ state: 'visible', timeout: TIMEOUT.default });
     await this.addRecipeTypeButton.click();
-    await this.page.waitForLoadState('networkidle', { timeout: TIMEOUT.long });
+    await this.page.waitForLoadState('networkidle', { timeout: TIMEOUT.long }).catch(() => {});
   }
 
   async fillRecipeTypeName(name: string) {
@@ -51,7 +51,8 @@ export class RecipeSetupPage extends BasePage {
   async clickSave() {
     await this.saveButton.waitFor({ state: 'visible', timeout: TIMEOUT.default });
     await this.saveButton.click();
-    await this.page.waitForLoadState('networkidle', { timeout: TIMEOUT.long });
+    await this.page.waitForLoadState('networkidle', { timeout: TIMEOUT.long }).catch(() => {});
+    await this.page.waitForTimeout(2000);
   }
 
   async addRecipeType(name: string, category: string) {

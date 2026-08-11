@@ -1,6 +1,7 @@
 import { test, expect, createResultsTracker } from '../../fixtures/basePersistentContext';
 import { CheckListPage } from '../../pages/SmartPrep/CheckListPage';
 import { PrepListPage } from '../../pages/SmartPrep/PrepListPage';
+import { PreparedItemsPage } from '../../pages/recipe/PreparedItemsPage';
 import { testNames } from '../../fixtures/testData';
 
 test.describe.configure({ mode: 'serial' });
@@ -8,6 +9,7 @@ test.describe.configure({ mode: 'serial' });
 test.describe('Recipe Smart Prep', () => {
   let checkListPage: CheckListPage;
   let prepListPage: PrepListPage;
+  let preparedItemsPage: PreparedItemsPage;
 
   const { results, logResults } = createResultsTracker('Recipe Smart Prep', [
     'Create Checklist Template',
@@ -16,12 +18,15 @@ test.describe('Recipe Smart Prep', () => {
     'AI Match Checklist',
     'Create Prep List Template',
     'Edit Prep List Template',
+    'Verify Prep Items in Prepared Items',
+    'Create Prep List with AI Match',
   ]);
 
   test.beforeAll(async ({ persistentPage }) => {
     test.setTimeout(600000);
     checkListPage = new CheckListPage(persistentPage);
     prepListPage = new PrepListPage(persistentPage);
+    preparedItemsPage = new PreparedItemsPage(persistentPage);
   });
 
   test.afterAll(async () => {
@@ -32,7 +37,7 @@ test.describe('Recipe Smart Prep', () => {
   // Stage 1: Create Checklist Template
   // ==========================================
 
-  test.skip('Create checklist template with sections and tasks', async () => {
+  test('Create checklist template with sections and tasks', async () => {
     await checkListPage.navigateToSmartPrep();
     await checkListPage.clickCreateChecklist();
     await checkListPage.fillTemplateName(testNames.smartPrepCheckList);
@@ -64,7 +69,7 @@ test.describe('Recipe Smart Prep', () => {
   // Stage 2: Edit Checklist Template
   // ==========================================
 
-  test.skip('Edit checklist template - rename, add task and change time', async () => {
+  test('Edit checklist template - rename, add task and change time', async () => {
     await checkListPage.clickTemplatesTab();
     await checkListPage.clickTemplateToEdit(testNames.smartPrepCheckList);
     await checkListPage.editTemplateName(testNames.smartPrepCheckListEdited);
@@ -81,7 +86,7 @@ test.describe('Recipe Smart Prep', () => {
   // Stage 3: Create Tasks
   // ==========================================
 
-  test.skip('Create tasks from Tasks tab', async () => {
+  test('Create tasks from Tasks tab', async () => {
     await checkListPage.clickTasksTab();
     await checkListPage.clickCreateTaskButton();
     await checkListPage.fillCreateTaskModal(
@@ -104,7 +109,7 @@ test.describe('Recipe Smart Prep', () => {
   // Stage 4: AI Match Checklist
   // ==========================================
 
-  test.skip('Create checklist using AI Match tasks', async () => {
+  test('Create checklist using AI Match tasks', async () => {
     await checkListPage.navigateToSmartPrep();
     await checkListPage.clickCreateChecklist();
     await checkListPage.fillTemplateName(testNames.smartPrepAIMatch);
@@ -181,5 +186,49 @@ test.describe('Recipe Smart Prep', () => {
     await prepListPage.selectApplyOptionAndSave();
     await prepListPage.verifyPrepListOnTemplatesTab(testNames.prepListEdited);
     results['Edit Prep List Template'] = 'passed';
+  });
+
+  // ==========================================
+  // Stage 7: Verify Prep Items in Prepared Items
+  // ==========================================
+
+  test('Verify prep items appear on Prepared Items page', async () => {
+    await preparedItemsPage.navigateToPreparedItems();
+    await preparedItemsPage.searchAndVerifyPreparedItem(testNames.prepItem1);
+    await preparedItemsPage.searchAndVerifyPreparedItem(testNames.prepItem2);
+    await preparedItemsPage.searchAndVerifyPreparedItem(testNames.prepItem3);
+    results['Verify Prep Items in Prepared Items'] = 'passed';
+  });
+
+  // ==========================================
+  // Stage 8: Create Prep List with AI Match
+  // ==========================================
+
+  test('Create prep list using AI Match', async () => {
+    await prepListPage.navigateToPrepList();
+    await prepListPage.clickCreatePrepList();
+    await prepListPage.fillPrepListName(testNames.prepListAIMatch);
+
+    await prepListPage.clickMatchTasksButton();
+    await prepListPage.fillAndMatchTasks([
+      testNames.prepItem1,
+      testNames.prepItem2,
+      testNames.prepItem3,
+    ]);
+    await prepListPage.verifyMatchedTask(testNames.prepItem1);
+    await prepListPage.verifyMatchedTask(testNames.prepItem2);
+    await prepListPage.verifyMatchedTask(testNames.prepItem3);
+
+    const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+    const today = days[new Date().getDay()];
+    await prepListPage.clickAddSchedule();
+    await prepListPage.selectScheduleDay(today);
+    await prepListPage.selectTimeToDisplay();
+    await prepListPage.selectTimeDue();
+    await prepListPage.selectAssignedStores('Wasabi Tysons');
+
+    await prepListPage.clickCreateTemplate();
+    await prepListPage.verifyPrepListOnTemplatesTab(testNames.prepListAIMatch);
+    results['Create Prep List with AI Match'] = 'passed';
   });
 });

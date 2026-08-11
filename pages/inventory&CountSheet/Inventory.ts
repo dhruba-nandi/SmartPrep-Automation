@@ -5,8 +5,8 @@ export class Inventory extends BasePage {
   private readonly myStoreTab: Locator;
   private readonly enterCountDropdown: Locator;
   private readonly inventoryDateInput: Locator;
-  private readonly saveOptionsDropdown: Locator;
-  private readonly saveAndCloseOption: Locator;
+  private readonly saveButton: Locator;
+  private readonly saveExpandButton: Locator;
   private readonly okButton: Locator;
 
   constructor(page: Page) {
@@ -14,8 +14,8 @@ export class Inventory extends BasePage {
     this.myStoreTab = page.locator('a.nav-link').filter({ hasText: /my store/i });
     this.enterCountDropdown = page.locator('button.btn.btn-primary.dropdown-toggle').filter({ hasText: /enter a count/i });
     this.inventoryDateInput = page.locator('input[name="inventoryDate"]');
-    this.saveOptionsDropdown = page.locator('button.btn.dropdown-toggle').filter({ hasText: /save options/i });
-    this.saveAndCloseOption = page.locator('[data-testid="save-and-close-inventory"]');
+    this.saveButton = page.getByRole('button', { name: 'Save' });
+    this.saveExpandButton = page.getByRole('button', { name: 'Expand more options' });
     this.okButton = page.locator('.bootbox-accept');
   }
 
@@ -71,19 +71,22 @@ export class Inventory extends BasePage {
   }
 
   async saveAndCloseInventory() {
-    await this.saveOptionsDropdown.waitFor({ state: 'visible', timeout: TIMEOUT.default });
-    await this.saveOptionsDropdown.click();
+    await this.saveExpandButton.waitFor({ state: 'visible', timeout: TIMEOUT.default });
+    await this.saveExpandButton.click();
     await this.page.waitForTimeout(500);
-    await this.saveAndCloseOption.waitFor({ state: 'visible', timeout: TIMEOUT.default });
-    await this.saveAndCloseOption.click();
+    const saveAndCloseOption = this.page.getByRole('menuitem', { name: /save and close/i })
+      .or(this.page.getByRole('menuitem', { name: /save & close/i }));
+    await saveAndCloseOption.waitFor({ state: 'visible', timeout: TIMEOUT.default });
+    await saveAndCloseOption.click();
     await this.waitForPageLoad();
   }
 
   async saveAndExitInventory() {
-    await this.saveOptionsDropdown.waitFor({ state: 'visible', timeout: TIMEOUT.default });
-    await this.saveOptionsDropdown.click();
+    await this.saveExpandButton.waitFor({ state: 'visible', timeout: TIMEOUT.default });
+    await this.saveExpandButton.click();
     await this.page.waitForTimeout(500);
-    const saveAndExitOption = this.page.locator('a.dropdown-toggle[ng-click="saveAndExit($event)"]');
+    const saveAndExitOption = this.page.getByRole('menuitem', { name: /save and exit/i })
+      .or(this.page.getByRole('menuitem', { name: /save & exit/i }));
     await saveAndExitOption.waitFor({ state: 'visible', timeout: TIMEOUT.default });
     await saveAndExitOption.click();
     await this.waitForPageLoad();
