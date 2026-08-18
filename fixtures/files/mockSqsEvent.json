@@ -1,0 +1,4 @@
+{"Records": [{"s3": {"bucket": {"name": "invoiceemail-marginedge-com"},
+"object": {
+"key": "stage-manifest/1p2274h1p75usfl3fo9bq4uga6oddkifus69t801"
+}}}]}

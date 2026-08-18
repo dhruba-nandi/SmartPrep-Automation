@@ -1,10 +1,10 @@
 import { test, expect, createResultsTracker } from '../../fixtures/basePersistentContext';
-import { ProductPage } from '../../pages/product/ProductPage';
-import { MenuItemsPage } from '../../pages/recipe/MenuItemsPage';
-import { RecipeSetupPage } from '../../pages/recipe/RecipeSetupPage';
-import { CountSheet } from '../../pages/inventory&CountSheet/CountSheet';
-import { Inventory } from '../../pages/inventory&CountSheet/Inventory';
-import { RestaurantUnitPage } from '../../pages/restaurantUnit/RestaurantUnitPage';
+import { ProductPage } from '../../pages/recipes/product/ProductPage';
+import { MenuItemsPage } from '../../pages/recipes/recipe/MenuItemsPage';
+import { RecipeSetupPage } from '../../pages/recipes/recipe/RecipeSetupPage';
+import { CountSheet } from '../../pages/recipes/inventory&CountSheet/CountSheet';
+import { Inventory } from '../../pages/recipes/inventory&CountSheet/Inventory';
+import { RestaurantUnitPage } from '../../pages/recipes/restaurantUnit/RestaurantUnitPage';
 import { testNames } from '../../fixtures/testData';
 
 test.describe.configure({ mode: 'serial' });

@@ -1,12 +1,12 @@
 import { test, expect, createResultsTracker } from '../../fixtures/basePersistentContext';
-import { ProductPage } from '../../pages/product/ProductPage';
-import { MenuItemsPage } from '../../pages/recipe/MenuItemsPage';
-import { BarItemsPage } from '../../pages/recipe/BarItemsPage';
-import { RecipeSetupPage } from '../../pages/recipe/RecipeSetupPage';
+import { ProductPage } from '../../pages/recipes/product/ProductPage';
+import { MenuItemsPage } from '../../pages/recipes/recipe/MenuItemsPage';
+import { BarItemsPage } from '../../pages/recipes/recipe/BarItemsPage';
+import { RecipeSetupPage } from '../../pages/recipes/recipe/RecipeSetupPage';
 import { LogInOutPage } from '../../pages/LogInOutPage';
-import { AppConfigPage } from '../../pages/developer/AppConfigPage';
-import { UserPage } from '../../pages/users/UserPage';
-import { SettingsPage } from '../../pages/users/SettingsPage';
+import { AppConfigPage } from '../../pages/recipes/developer/AppConfigPage';
+import { UserPage } from '../../pages/recipes/users/UserPage';
+import { SettingsPage } from '../../pages/recipes/users/SettingsPage';
 import { config } from '../../pages/BasePage';
 import { testNames } from '../../fixtures/testData';
 

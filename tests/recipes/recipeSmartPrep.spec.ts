@@ -1,7 +1,7 @@
 import { test, expect, createResultsTracker } from '../../fixtures/basePersistentContext';
-import { CheckListPage } from '../../pages/SmartPrep/CheckListPage';
-import { PrepListPage } from '../../pages/SmartPrep/PrepListPage';
-import { PreparedItemsPage } from '../../pages/recipe/PreparedItemsPage';
+import { CheckListPage } from '../../pages/recipes/SmartPrep/CheckListPage';
+import { PrepListPage } from '../../pages/recipes/SmartPrep/PrepListPage';
+import { PreparedItemsPage } from '../../pages/recipes/recipe/PreparedItemsPage';
 import { testNames } from '../../fixtures/testData';
 
 test.describe.configure({ mode: 'serial' });

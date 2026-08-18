@@ -1,9 +1,9 @@
 import { test, expect, createResultsTracker } from '../../fixtures/basePersistentContext';
-import { VendorPage } from '../../pages/vendor/VendorPage';
-import { PreparedItemsPage } from '../../pages/recipe/PreparedItemsPage';
-import { VendorItemPage } from '../../pages/vendorItem/VendorItemPage';
-import { PlaceOrderPage } from '../../pages/order/PlaceOrderPage';
-import { InboundOrderPage } from '../../pages/order/InboundOrderPage';
+import { VendorPage } from '../../pages/recipes/vendor/VendorPage';
+import { PreparedItemsPage } from '../../pages/recipes/recipe/PreparedItemsPage';
+import { VendorItemPage } from '../../pages/recipes/vendorItem/VendorItemPage';
+import { PlaceOrderPage } from '../../pages/recipes/order/PlaceOrderPage';
+import { InboundOrderPage } from '../../pages/recipes/order/InboundOrderPage';
 import { testNames } from '../../fixtures/testData';
 
 test.describe.configure({ mode: 'serial' });
