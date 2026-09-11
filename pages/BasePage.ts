@@ -37,6 +37,18 @@ export class BasePage {
     await this.page.waitForLoadState('domcontentloaded', { timeout });
   }
 
+  /**
+   * Waits for the page's in-flight requests to settle after an action. The app keeps
+   * background traffic going (polling and analytics beacons), so 'networkidle' is never
+   * guaranteed to be reached and waiting on it hard turns a healthy page into a timeout.
+   * The wait is therefore best-effort: the DOM load state is awaited, the idle state is
+   * given a short window, and callers assert on the UI they expect afterwards.
+   */
+  async waitForNetworkSettled(timeout = TIMEOUT.default) {
+    await this.page.waitForLoadState('domcontentloaded', { timeout }).catch(() => {});
+    await this.page.waitForLoadState('networkidle', { timeout }).catch(() => {});
+  }
+
   async isVisible(locator: Locator): Promise<boolean> {
     return locator.isVisible().catch(() => false);
   }
