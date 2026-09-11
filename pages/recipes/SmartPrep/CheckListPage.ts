@@ -36,6 +36,7 @@ export class CheckListPage extends BasePage {
   private readonly templatesTab: Locator;
   private readonly saveTemplateButton: Locator;
   private readonly saveChangesButton: Locator;
+  private readonly confirmDeleteButton: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -73,6 +74,7 @@ export class CheckListPage extends BasePage {
     this.templatesTab = page.getByRole('tab', { name: 'Templates' });
     this.saveTemplateButton = page.getByRole('button', { name: 'Save' });
     this.saveChangesButton = page.getByRole('button', { name: 'Save changes' });
+    this.confirmDeleteButton = page.getByRole('button', { name: /^delete checklist$/i });
   }
 
   async navigateToSmartPrep() {
@@ -290,18 +292,70 @@ export class CheckListPage extends BasePage {
     await this.page.waitForLoadState('networkidle', { timeout: TIMEOUT.long });
   }
 
-  async clickTemplateToEdit(templateName: string) {
+  /** Resolves a Templates-tab column index by its header text, so the table can gain or reorder columns. */
+  private async getTemplatesColumnIndex(headerName: string): Promise<number> {
+    const headers = this.page.getByRole('columnheader');
+    await headers.first().waitFor({ state: 'visible', timeout: TIMEOUT.default });
+
+    const count = await headers.count();
+    for (let i = 0; i < count; i++) {
+      const text = (await headers.nth(i).innerText()).trim();
+      if (text.toLowerCase() === headerName.toLowerCase()) {
+        return i;
+      }
+    }
+    throw new Error(`Column "${headerName}" was not found on the Templates tab`);
+  }
+
+  /** Reads the number shown in the Templates tab "Tasks" column for a template. */
+  async getTemplateTaskCount(templateName: string): Promise<number> {
+    const tasksColumn = await this.getTemplatesColumnIndex('Tasks');
+
+    const templateRow = this.page.getByRole('row').filter({ hasText: templateName }).first();
+    await templateRow.waitFor({ state: 'visible', timeout: TIMEOUT.default });
+
+    const cellText = (await templateRow.getByRole('cell').nth(tasksColumn).innerText()).trim();
+    return Number(cellText);
+  }
+
+  private async openTemplateRowMenu(templateName: string) {
     const templateRow = this.page.getByRole('row', { name: new RegExp(templateName) }).first();
     await templateRow.waitFor({ state: 'visible', timeout: TIMEOUT.default });
 
     const moreButton = templateRow.getByRole('button').last();
     await moreButton.click();
     await this.page.waitForTimeout(500);
+  }
+
+  async clickTemplateToEdit(templateName: string) {
+    await this.openTemplateRowMenu(templateName);
 
     const editOption = this.page.getByRole('menuitem', { name: /edit/i }).first();
     await editOption.waitFor({ state: 'visible', timeout: TIMEOUT.default });
     await editOption.click();
     await this.page.waitForLoadState('networkidle', { timeout: TIMEOUT.long });
+  }
+
+  async clickDeleteTemplate(templateName: string) {
+    await this.openTemplateRowMenu(templateName);
+
+    const deleteOption = this.page.getByRole('menuitem', { name: /delete/i }).first();
+    await deleteOption.waitFor({ state: 'visible', timeout: TIMEOUT.default });
+    await deleteOption.click();
+    await this.page.waitForTimeout(1000);
+  }
+
+  async confirmDeleteTemplate() {
+    const deleteButton = this.confirmDeleteButton;
+    await deleteButton.waitFor({ state: 'visible', timeout: TIMEOUT.default });
+    await deleteButton.click();
+    await this.page.waitForLoadState('networkidle', { timeout: TIMEOUT.long });
+    await this.page.waitForTimeout(2000);
+  }
+
+  async verifyTemplateDeleted(templateName: string) {
+    const templateRow = this.page.getByRole('row', { name: new RegExp(templateName) });
+    await expect(templateRow).toHaveCount(0, { timeout: TIMEOUT.long });
   }
 
   async updateDisplayTime() {

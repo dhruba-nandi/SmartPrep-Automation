@@ -9,12 +9,13 @@
 | Recipe Active Deactive | `npm run test:recipe3` | `npx playwright test tests/recipes/recipeInventory.spec.ts --headed --project=chromium` |
 | Recipe Plate Cost | `npm run test:plateCost` | `npx playwright test tests/recipes/recipePlateCost.spec.ts --headed --project=chromium` |
 | Recipe Commissary Items | `npm run test:commissary` | `npx playwright test tests/recipes/recipeCommissary.spec.ts --headed --project=chromium` |
-| Recipe Smart Prep | `npm run test:smartPrep` | `npx playwright test tests/recipes/recipeSmartPrep.spec.ts --headed --project=chromium` |
+| Recipe Smart Prep | `npm run test:smartPrep` | `npx playwright test tests/recipes/CheckList.spec.ts --headed --project=chromium` |
+| Recipe Prep List | `npm run test:prepList` | `npx playwright test tests/recipes/PrepList.spec.ts --headed --project=chromium` |
 
 ## Run All Recipe Suites Sequentially
 
 ```bash
-npx playwright test tests/recipes/recipeMethodAndDuplication.spec.ts tests/recipes/recipePriceChange.spec.ts tests/recipes/recipeInventory.spec.ts tests/recipes/recipePlateCost.spec.ts tests/recipes/recipeCommissary.spec.ts tests/recipes/recipeSmartPrep.spec.ts --workers=1 --timeout 600000
+npx playwright test tests/recipes/recipeMethodAndDuplication.spec.ts tests/recipes/recipePriceChange.spec.ts tests/recipes/recipeInventory.spec.ts tests/recipes/recipePlateCost.spec.ts tests/recipes/recipeCommissary.spec.ts tests/recipes/CheckList.spec.ts tests/recipes/PrepList.spec.ts --workers=1 --timeout 600000
 ```
 
 ## Target a Different Environment
@@ -47,5 +48,5 @@ JIRA_TICKET=ME-1234 \
 JIRA_BASE_URL=https://marginedge.atlassian.net \
 JIRA_EMAIL=user@co.com \
 JIRA_API_TOKEN=xxx \
-npx playwright test tests/recipes/recipeMethodAndDuplication.spec.ts tests/recipes/recipePriceChange.spec.ts tests/recipes/recipeInventory.spec.ts tests/recipes/recipePlateCost.spec.ts tests/recipes/recipeCommissary.spec.ts tests/recipes/recipeSmartPrep.spec.ts --workers=1 --timeout 600000
+npx playwright test tests/recipes/recipeMethodAndDuplication.spec.ts tests/recipes/recipePriceChange.spec.ts tests/recipes/recipeInventory.spec.ts tests/recipes/recipePlateCost.spec.ts tests/recipes/recipeCommissary.spec.ts tests/recipes/CheckList.spec.ts tests/recipes/PrepList.spec.ts --workers=1 --timeout 600000
 ```

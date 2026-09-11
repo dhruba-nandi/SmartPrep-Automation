@@ -13,7 +13,8 @@
     "test:recipe2": "npx playwright test tests/recipes/recipePriceChange.spec.ts --headed --project=chromium",
     "test:recipe3": "npx playwright test tests/recipes/recipeInventory.spec.ts --headed --project=chromium",
     "test:commissary": "npx playwright test tests/recipes/recipeCommissary.spec.ts --headed --project=chromium",
-    "test:smartPrep": "npx playwright test tests/recipes/recipeSmartPrep.spec.ts --headed --project=chromium",
+    "test:smartPrep": "npx playwright test tests/recipes/CheckList.spec.ts --headed --project=chromium",
+    "test:prepList": "npx playwright test tests/recipes/PrepList.spec.ts --headed --project=chromium",
     "mcp": "npx @playwright/mcp@latest"
   },
   "keywords": [],

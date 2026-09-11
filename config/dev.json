@@ -1,5 +1,5 @@
 {
-  "baseUrl": "https://me-67790.dev.marginedge.com",
+  "baseUrl": "https://me-68511.dev.marginedge.com",
   "routes": {
     "orders": "/#/order/v2",
     "inventorySetup": "/#/inventorySetup",
@@ -11,7 +11,7 @@
   },
   "credentials": {
     "username": "accountmanager",
-    "password": "g7B--*zGFtX898bB2GnL"
+    "password": "2a2m_W24Hji293dg.-in"
   },
   "timeouts": {
     "short": 5000,

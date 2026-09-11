@@ -1,32 +1,31 @@
 import { test, expect, createResultsTracker } from '../../fixtures/basePersistentContext';
 import { CheckListPage } from '../../pages/recipes/SmartPrep/CheckListPage';
-import { PrepListPage } from '../../pages/recipes/SmartPrep/PrepListPage';
-import { PreparedItemsPage } from '../../pages/recipes/recipe/PreparedItemsPage';
 import { testNames } from '../../fixtures/testData';
 
 test.describe.configure({ mode: 'serial' });
 
 test.describe('Recipe Smart Prep', () => {
   let checkListPage: CheckListPage;
-  let prepListPage: PrepListPage;
-  let preparedItemsPage: PreparedItemsPage;
+
+  // Expected values for the Templates tab "Tasks" column. Sections are not counted —
+  // the column is the total number of task rows summed across every section.
+  const EXPECTED_TASKS = {
+    created: 4,   // Cleaning, Dishwasher + Inventory Count, Food Prep
+    edited: 5,    // the four above + Equipment Check added during the edit
+    aiMatch: 2,   // the two tasks fed into Match tasks
+  };
 
   const { results, logResults } = createResultsTracker('Recipe Smart Prep', [
     'Create Checklist Template',
     'Edit Checklist Template',
     'Create Tasks',
     'AI Match Checklist',
-    'Create Prep List Template',
-    'Edit Prep List Template',
-    'Verify Prep Items in Prepared Items',
-    'Create Prep List with AI Match',
+    'Delete Checklist Template',
   ]);
 
   test.beforeAll(async ({ persistentPage }) => {
     test.setTimeout(600000);
     checkListPage = new CheckListPage(persistentPage);
-    prepListPage = new PrepListPage(persistentPage);
-    preparedItemsPage = new PreparedItemsPage(persistentPage);
   });
 
   test.afterAll(async () => {
@@ -53,15 +52,22 @@ test.describe('Recipe Smart Prep', () => {
     await checkListPage.addTaskItem('Food Prep', 'Checkmark');
 
     const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-    const today = days[new Date().getDay()];
+    //const today = days[new Date().getDay()];
     await checkListPage.clickAddSchedule();
-    await checkListPage.selectScheduleDay(today);
+    for (const day of days) {
+  await checkListPage.selectScheduleDay(day);
+}
+    //await checkListPage.selectScheduleDay(today);
     await checkListPage.selectTimeToDisplay();
     await checkListPage.selectTimeDue();
     await checkListPage.selectAssignedStores('Wasabi Tysons');
 
     await checkListPage.clickCreateTemplate();
     await checkListPage.verifyChecklistOnChecklistsTab(testNames.smartPrepCheckList);
+
+    await checkListPage.clickTemplatesTab();
+    expect(await checkListPage.getTemplateTaskCount(testNames.smartPrepCheckList))
+      .toBe(EXPECTED_TASKS.created);
     results['Create Checklist Template'] = 'passed';
   });
 
@@ -79,6 +85,10 @@ test.describe('Recipe Smart Prep', () => {
     await checkListPage.clickSaveTemplate();
     await checkListPage.selectApplyOptionAndSave();
     await checkListPage.verifyChecklistOnChecklistsTab(testNames.smartPrepCheckListEdited);
+
+    await checkListPage.clickTemplatesTab();
+    expect(await checkListPage.getTemplateTaskCount(testNames.smartPrepCheckListEdited))
+      .toBe(EXPECTED_TASKS.edited);
     results['Edit Checklist Template'] = 'passed';
   });
 
@@ -132,103 +142,22 @@ test.describe('Recipe Smart Prep', () => {
 
     await checkListPage.clickCreateTemplate();
     await checkListPage.verifyChecklistOnChecklistsTab(testNames.smartPrepAIMatch);
+
+    await checkListPage.clickTemplatesTab();
+    expect(await checkListPage.getTemplateTaskCount(testNames.smartPrepAIMatch))
+      .toBe(EXPECTED_TASKS.aiMatch);
     results['AI Match Checklist'] = 'passed';
   });
 
   // ==========================================
-  // Stage 5: Create Prep List Template
+  // Stage 5: Delete Checklist Template
   // ==========================================
 
-  test('Create prep list template with recipes and schedule', async () => {
-    await prepListPage.navigateToPrepList();
-    await prepListPage.clickCreatePrepList();
-    await prepListPage.fillPrepListName(testNames.prepList);
-
-    await prepListPage.clickAddRecipe();
-    await prepListPage.addRecipeItem(testNames.prepItem1);
-    await prepListPage.clickAddShelfLife();
-    await prepListPage.fillSaveRecipeModal('1', 'day', '1', 'kilogram');
-
-    await prepListPage.addRecipeRow();
-    await prepListPage.addRecipeItem(testNames.prepItem2);
-    await prepListPage.clickAddShelfLife();
-    await prepListPage.fillSaveRecipeModal('1', 'day', '1', 'kilogram');
-
-    const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-    const today = days[new Date().getDay()];
-    await prepListPage.clickAddSchedule();
-    await prepListPage.selectScheduleDay(today);
-    await prepListPage.selectTimeToDisplay();
-    await prepListPage.selectTimeDue();
-    await prepListPage.selectAssignedStores('Wasabi Tysons');
-
-    await prepListPage.clickCreateTemplate();
-    await prepListPage.verifyPrepListOnPrepListsTab(testNames.prepList);
-    results['Create Prep List Template'] = 'passed';
-  });
-
-  // ==========================================
-  // Stage 6: Edit Prep List Template
-  // ==========================================
-
-  test('Edit prep list template - rename, add recipe and change time', async () => {
-    await prepListPage.clickTemplatesTab();
-    await prepListPage.clickTemplateToEdit(testNames.prepList);
-    await prepListPage.editPrepListName(testNames.prepListEdited);
-
-    await prepListPage.addSection();
-    await prepListPage.addRecipeItem(testNames.prepItem3);
-    await prepListPage.clickAddShelfLife();
-    await prepListPage.fillSaveRecipeModal('1', 'day', '1', 'kilogram');
-
-    await prepListPage.updateDisplayTime();
-    await prepListPage.clickSaveTemplate();
-    await prepListPage.selectApplyOptionAndSave();
-    await prepListPage.verifyPrepListOnTemplatesTab(testNames.prepListEdited);
-    results['Edit Prep List Template'] = 'passed';
-  });
-
-  // ==========================================
-  // Stage 7: Verify Prep Items in Prepared Items
-  // ==========================================
-
-  test('Verify prep items appear on Prepared Items page', async () => {
-    await preparedItemsPage.navigateToPreparedItems();
-    await preparedItemsPage.searchAndVerifyPreparedItem(testNames.prepItem1);
-    await preparedItemsPage.searchAndVerifyPreparedItem(testNames.prepItem2);
-    await preparedItemsPage.searchAndVerifyPreparedItem(testNames.prepItem3);
-    results['Verify Prep Items in Prepared Items'] = 'passed';
-  });
-
-  // ==========================================
-  // Stage 8: Create Prep List with AI Match
-  // ==========================================
-
-  test('Create prep list using AI Match', async () => {
-    await prepListPage.navigateToPrepList();
-    await prepListPage.clickCreatePrepList();
-    await prepListPage.fillPrepListName(testNames.prepListAIMatch);
-
-    await prepListPage.clickMatchTasksButton();
-    await prepListPage.fillAndMatchTasks([
-      testNames.prepItem1,
-      testNames.prepItem2,
-      testNames.prepItem3,
-    ]);
-    await prepListPage.verifyMatchedTask(testNames.prepItem1);
-    await prepListPage.verifyMatchedTask(testNames.prepItem2);
-    await prepListPage.verifyMatchedTask(testNames.prepItem3);
-
-    const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-    const today = days[new Date().getDay()];
-    await prepListPage.clickAddSchedule();
-    await prepListPage.selectScheduleDay(today);
-    await prepListPage.selectTimeToDisplay();
-    await prepListPage.selectTimeDue();
-    await prepListPage.selectAssignedStores('Wasabi Tysons');
-
-    await prepListPage.clickCreateTemplate();
-    await prepListPage.verifyPrepListOnTemplatesTab(testNames.prepListAIMatch);
-    results['Create Prep List with AI Match'] = 'passed';
+  test('Delete checklist template from Templates tab', async () => {
+    await checkListPage.clickTemplatesTab();
+    await checkListPage.clickDeleteTemplate(testNames.smartPrepCheckListEdited);
+    await checkListPage.confirmDeleteTemplate();
+    await checkListPage.verifyTemplateDeleted(testNames.smartPrepCheckListEdited);
+    results['Delete Checklist Template'] = 'passed';
   });
 });
